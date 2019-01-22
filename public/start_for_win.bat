@@ -1,3 +1,3 @@
 CHCP 65001
-php start_io.php
+php demo_io.php
 pause

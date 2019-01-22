@@ -16,3 +16,4 @@ Route::get('/', function () {
 });
 
 Route::get('/web-sender', 'WebSenderController@index')->name('msg.sender.home');
+Route::get('/web-sender/getList', 'WebSenderController@getList');

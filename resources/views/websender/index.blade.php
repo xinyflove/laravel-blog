@@ -13,7 +13,8 @@
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     {{-- Styles --}}
-    <link href="{{ asset('css/main.css') }}" rel="stylesheet">
+    <link href="{{ asset('js/layui/css/layui.css?v=v2.2.5') }}" rel="stylesheet">
+    <link href="{{ asset('css/main.css?v=1.0.0') }}" rel="stylesheet">
     @yield('styles')
 </head>
 <body>
@@ -75,7 +76,8 @@
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     {{-- Scripts --}}
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/layui/layui.js?v=v2.2.5') }}"></script>
+    <script src="{{ asset('js/laychat.js?v=v1.0.1') }}"></script>
     @yield('scripts')
     {{--<script>
         $(document).ready(function(){
@@ -113,5 +115,6 @@
             console.log('get message:' + msg + ' from server');
         });
     </script>
+
 </body>
 </html>
