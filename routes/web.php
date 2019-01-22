@@ -15,4 +15,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/msg-sender', 'MsgSenderController@index')->name('msg.sender.home');
+Route::get('/web-sender', 'WebSenderController@index')->name('msg.sender.home');

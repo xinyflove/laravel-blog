@@ -77,7 +77,7 @@
     {{-- Scripts --}}
     <script src="{{ asset('js/app.js') }}"></script>
     @yield('scripts')
-    <script>
+    {{--<script>
         $(document).ready(function(){
             // 使用时替换成真实的uid，这里方便演示使用时间戳
             var uid = Date.parse(new Date());
@@ -101,6 +101,16 @@
             socket.on('update_online_count', function(online_stat){
                 $('#online_box').html(online_stat);
             });
+        });
+    </script>--}}
+    <script>
+        // 连接服务端
+        var socket = io('http://127.0.0.1:3120');
+        // 触发服务端的chat message事件
+        //socket.emit('chat message', '这个是消息内容...');
+        // 服务端通过emit('chat message from server', $msg)触发客户端的chat message from server事件
+        socket.on('chat message', function(msg){
+            console.log('get message:' + msg + ' from server');
         });
     </script>
 </body>
