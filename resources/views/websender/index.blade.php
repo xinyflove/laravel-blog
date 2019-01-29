@@ -77,6 +77,9 @@
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     {{-- Scripts --}}
     <script src="{{ asset('js/layui/layui.js?v=v2.2.5') }}"></script>
+    <script>
+        var user_id = '{{$user_id}}';
+    </script>
     <script src="{{ asset('js/laychat.js?v=v1.0.1') }}"></script>
     @yield('scripts')
     {{--<script>
@@ -105,7 +108,7 @@
             });
         });
     </script>--}}
-    <script>
+    {{--<script>
         // 连接服务端
         var socket = io('http://127.0.0.1:3120');
         // 触发服务端的chat message事件
@@ -114,7 +117,7 @@
         socket.on('chat message', function(msg){
             console.log('get message:' + msg + ' from server');
         });
-    </script>
+    </script>--}}
 
 </body>
 </html>

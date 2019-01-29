@@ -10,14 +10,20 @@ class WebSenderController extends Controller {
     public function index(Request $request)
     {
         $user_id = $request->input('user_id');
-        if($user_id) $request->session()->put('chat_user_id', $user_id);
+        $user_info = array();
+        if($user_id)
+        {
+            $user_info = DB::table('chat_users')->where('id', '=', $user_id)->first();
+            $request->session()->put('chat_user_info', $user_info);
+        }
 
-        return view('websender.index');
+        return view('websender.index', array('user_id'=>$user_id));
     }
 
     public function getList(Request $request)
     {
-        $user_id = $request->session()->get('chat_user_id');
+        $user_info = $request->session()->get('chat_user_info');
+        $user_id = $user_info->id;
         $friend = array();  //好友列表
 
         $user = DB::select('select * from chat_users where id = :id', ['id' => $user_id]);
@@ -79,6 +85,21 @@ class WebSenderController extends Controller {
                 'mine' => $mine,
                 'friend' => $friend,
                 'group' => $group,
+            )
+        );
+
+        echo json_encode($datas);
+    }
+
+    public function getMembers(Request $request)
+    {
+        $list = DB::select('select * from chat_users', []);
+        
+        $datas = array(
+            'code' => 0,
+            'msg' => '',
+            'data' => array(
+                'list' => $list,
             )
         );
 
