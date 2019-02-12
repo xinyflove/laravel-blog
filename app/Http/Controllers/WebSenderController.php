@@ -135,8 +135,64 @@ class WebSenderController extends Controller {
      * 聊天记录
      * @param Request $request
      */
-    public function chatLog(Request $request)
+    public function chatLogIndex(Request $request)
     {
+        $id = $request->input('id', 0);
+        $type = $request->input('type');
 
+        return view('websender.chatlog', array('id'=>$id, 'type'=>$type));
+    }
+
+    /**
+     * 聊天记录数据
+     * @param Request $request
+     * @return string
+     */
+    public function chatLogDetail(Request $request)
+    {
+        $id = $request->input('id', 0);
+        $type = $request->input('type');
+        $mine = $request->session()->get('chat_mine');//自己的信息
+
+        if($type == 'friend')
+        {
+            $result = DB::table('chat_log')
+                ->where('type', 'friend')
+                ->where(function($query)use($mine,$id){
+                    $query->where(array(
+                        array('fromid', '=', $mine->id),
+                        array('toid', '=', $id)
+                    ))->orWhere(function ($query)use($mine,$id){
+                        $query->where(array(
+                            array('fromid', '=', $id),
+                            array('toid', '=', $mine->id)
+                        ));
+                    });
+                })
+                ->orderBy('timeline', 'DESC')
+                ->get();
+
+            if(empty($result)){
+                return json_encode(array('code' => -1, 'data' => '', 'msg' => '没有记录'));
+            }
+
+            return json_encode(array('code' => 1, 'data' => $result, 'msg' => 'success'));
+        }
+        else if('group' == $type)
+        {
+            $result = DB::table('chat_log')
+                ->where(array(
+                    array('toid', '=', $id),
+                    array('type', '=', 'group')
+                ))
+                ->orderBy('timeline', 'DESC')
+                ->get();
+
+            if(empty($result)){
+                return json_encode(array('code' => -1, 'data' => '', 'msg' => '没有记录'));
+            }
+
+            return json_encode(array('code' => 1, 'data' => $result, 'msg' => 'success'));
+        }
     }
 }

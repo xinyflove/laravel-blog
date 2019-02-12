@@ -8,7 +8,8 @@
     <meta name="author" content="{{ config('blog.author') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Web推送消息</title>
+    <title>PHP 聊天系统</title>
+    <link rel="shortcut icon" href="favicon.ico">
 
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -60,7 +61,12 @@
     {{-- Scripts --}}
     <script src="{{ asset('js/layui/layui.js?v=v2.2.5') }}"></script>
     <script>
-        var user_id = '{{$user_id}}';
+        var userId = '{{$user_id}}';
+        var initUrl = '/web-sender/getList';
+        var membersUrl = '/web-sender/getMembers';
+        var uploadImageUrl = '';
+        var uploadFileUrl = '';
+        var chatLogUrl = '/web-sender/chatLogIndex';
     </script>
     <script src="{{ asset('js/laychat.js?v=v1.0.1') }}"></script>
     @yield('scripts')

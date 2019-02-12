@@ -8,27 +8,27 @@ layui.use(['layim'], function(){
 
         //获取主面板列表信息
         init: {
-            url: '/web-sender/getList' //接口地址（返回的数据格式见下文）
+            url: initUrl ? initUrl : '' //接口地址（返回的数据格式见下文）
             ,type: 'get' //默认get，一般可不填
             ,data: {} //额外参数
         }
 
         //获取群员接口
         ,members: {
-            url: '/web-sender/getMembers' //接口地址（返回的数据格式见下文）
+            url: membersUrl ? membersUrl : '' //接口地址（返回的数据格式见下文）
             ,type: 'get' //默认get，一般可不填
             ,data: {} //额外参数
         }
 
         //上传图片接口（返回的数据格式见下文）
         ,uploadImage: {
-            url: '' //接口地址（返回的数据格式见下文）
+            url: uploadImageUrl ? uploadImageUrl : '' //接口地址（返回的数据格式见下文）
             ,type: 'post' //默认post
         }
 
         //上传文件接口（返回的数据格式见下文）
         ,uploadFile: {
-            url: '' //接口地址（返回的数据格式见下文）
+            url: uploadFileUrl ? uploadFileUrl : '' //接口地址（返回的数据格式见下文）
             ,type: 'post' //默认post
         }
 
@@ -52,7 +52,7 @@ layui.use(['layim'], function(){
         ,maxLength: 3000 //最长发送的字符长度，默认3000
         ,isfriend: true //是否开启好友（默认true，即开启）
         ,isgroup: true //是否开启群组（默认true，即开启）
-        ,chatLog: '/web-sender/chatLog' //聊天记录地址（如果未填则不显示）
+        ,chatLog: chatLogUrl ? chatLogUrl : '' //聊天记录地址（如果未填则不显示）
         ,find: '/find/' //查找好友/群的地址（如果未填则不显示）
         ,copyright: false //是否授权，如果通过官网捐赠获得LayIM，此处可填true
     });
@@ -62,7 +62,7 @@ layui.use(['layim'], function(){
     var msgcount = '3';//获取未读信息条数
     // 连接成功时触发
     socket.on('connect', function(){
-        socket.emit('login', user_id);
+        socket.emit('login', userId);
         console.log("websocket握手成功!");
     });
 
