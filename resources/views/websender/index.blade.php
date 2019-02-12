@@ -40,24 +40,6 @@
             <li>支持在线页面数实时统计推送（见页脚统计）</li>
         </ul>
 
-        <h3>测试:</h3>
-        <p>当前用户uid：<strong class="uid"></strong></p>
-        <p>
-            可以通过url：
-            <a id="send_to_one" href="http://www.workerman.net:2121/?type=publish&to=1445590039000&content=%E6%B6%88%E6%81%AF%E5%86%85%E5%AE%B9" target="_blank">
-                <span style="color:#91BD09">
-                    http://<span class="domain"></span>:2121?type=publish&to=<b class="uid"></b>&content=消息内容</span>
-            </a>
-            向当前用户发送消息
-        </p>
-        <p>
-            可以通过url：
-            <a href="http://www.workerman.net:2121/?type=publish&to=&content=%E6%B6%88%E6%81%AF%E5%86%85%E5%AE%B9" target="_blank"  id="send_to_all" >
-                <span style="color:#91BD09"
-                >http://<span class="domain"></span>:2121?type=publish&to=&content=消息内容</span>
-            </a>
-            向所有在线用户推送消息
-        </p>
     </div>
 
     <footer class="footer">
@@ -82,42 +64,6 @@
     </script>
     <script src="{{ asset('js/laychat.js?v=v1.0.1') }}"></script>
     @yield('scripts')
-    {{--<script>
-        $(document).ready(function(){
-            // 使用时替换成真实的uid，这里方便演示使用时间戳
-            var uid = Date.parse(new Date());
-            $('#send_to_one').attr('href', 'http://'+document.domain+':2121/?type=publish&content=%E6%B6%88%E6%81%AF%E5%86%85%E5%AE%B9&to='+uid);
-            $('#send_to_all').attr('href', 'http://'+document.domain+':2121/?type=publish&content=%E6%B6%88%E6%81%AF%E5%86%85%E5%AE%B9');
-            $('.uid').html(uid);
-            $('.domain').html(document.domain);
-
-            // 连接服务端
-            var socket = io('http://'+document.domain+':2120');
-            // 连接后登录
-            socket.on('connect', function(){
-                socket.emit('login', uid);
-            });
-            // 后端推送来消息时
-            socket.on('new_msg', function(msg){
-                $('#content').html('收到消息：'+msg);
-                $('.alert').show();
-            });
-            // 后端推送来在线数据时
-            socket.on('update_online_count', function(online_stat){
-                $('#online_box').html(online_stat);
-            });
-        });
-    </script>--}}
-    {{--<script>
-        // 连接服务端
-        var socket = io('http://127.0.0.1:3120');
-        // 触发服务端的chat message事件
-        //socket.emit('chat message', '这个是消息内容...');
-        // 服务端通过emit('chat message from server', $msg)触发客户端的chat message from server事件
-        socket.on('chat message', function(msg){
-            console.log('get message:' + msg + ' from server');
-        });
-    </script>--}}
 
 </body>
 </html>

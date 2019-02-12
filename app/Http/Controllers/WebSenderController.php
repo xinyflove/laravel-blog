@@ -4,60 +4,60 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Exception;
 
 class WebSenderController extends Controller {
 
+    /**
+     * 首页
+     * @param Request $request
+     * @return mixed
+     * @throws Exception
+     */
     public function index(Request $request)
     {
-        $user_id = $request->input('user_id');
-        $user_info = array();
+        $user_id = $request->input('user_id', 0);
+
         if($user_id)
         {
-            $user_info = DB::table('chat_users')->where('id', '=', $user_id)->first();
-            $request->session()->put('chat_user_info', $user_info);
+            // 查询自己的信息
+            $mine = DB::table('chat_users')->where('id', '=', $user_id)->first();
+            $request->session()->put('chat_mine', $mine);
         }
 
         return view('websender.index', array('user_id'=>$user_id));
     }
 
+    /**
+     * 获取主面板列表信息
+     * @param Request $request
+     */
     public function getList(Request $request)
     {
-        $user_info = $request->session()->get('chat_user_info');
-        $user_id = $user_info->id;
-        $friend = array();  //好友列表
+        $mine = $request->session()->get('chat_mine');//自己的信息
+        $groupArr = array();//查询当前用户的所处的群组
 
-        $user = DB::select('select * from chat_users where id = :id', ['id' => $user_id]);
-        if($user)
+        if($mine)
         {
-            $mine = (array)$user[0];    //我的信息
+            //全部用户(排除自己)
+            $other = DB::table('chat_users')
+                ->where('id', '<>', $mine->id)
+                ->orderBy('status', 'DESC')
+                ->get();
 
-            $friend_group = DB::select('select * from chat_friend_group where user_id = :user_id', ['user_id' => $user_id]);
-
-            if($friend_group)
+            $group_ids = DB::table('chat_group_rel')
+                ->where('user_id', '=', $mine->id)
+                ->pluck('group_id');
+            if(!empty($group_ids))
             {
-                foreach ($friend_group as $fg)
-                {
-                    $_g_info = array(
-                        'id' => $fg->id,
-                        'groupname' => $fg->groupname,
-                        'list' => array()
-                    );
-
-                    $_friend_ids = DB::select('select user_id from chat_friend_group_rel where group_id = :group_id', ['group_id' => $fg->id]);
-                    if($_friend_ids)
-                    {
-                        $_friend_ids = implode(',', array_column($_friend_ids, 'user_id'));
-                        $_friends = DB::select('select * from chat_users where id IN ('.$_friend_ids.')', []);
-                        foreach ($_friends as &$f)
-                        {
-                            $f = (array)$f;
-                        }
-                        unset($f);
-                        $_g_info['list'] = $_friends;
+                foreach( $group_ids as $gid ){
+                    $ret = DB::table('chat_group')->where('id', '=', $gid)->first();
+                    if( !empty( $ret ) ){
+                        $groupArr[] = (array)$ret;
                     }
-                    $friend[] = $_g_info;
                 }
             }
+            unset( $ret, $group_ids );
         }
         else
         {
@@ -66,25 +66,50 @@ class WebSenderController extends Controller {
                 'sign' => '未登录用户，请登录发言',
                 'login' => false,
             );
+
+            //全部用户
+            $other = DB::table('chat_users')
+                ->orderBy('status', 'DESC')
+                ->get();
         }
 
-        $group = DB::select('select * from chat_group', []);    //群组列表
-        if($group)
-        {
-            foreach ($group as &$g)
-            {
-                $g = (array)$g;
-            }
-            unset($g);
+        $group = array();//记录分组信息
+        $userGroup = DB::table('chat_user_group')->get();//用户分组
+        foreach( $userGroup as $ugv ){
+            $group[] = array(
+                'id' => $ugv->id,
+                'groupname' => $ugv->groupname,
+                'list' => array()
+            );
         }
+        unset($ugv, $userGroup);
+
+        foreach( $group as &$gv ){
+
+            foreach( $other as $ov ) {
+
+                if ($gv['id'] == $ov->groupid) {
+
+                    $_list['username'] = $ov->username;
+                    $_list['id'] = $ov->id;
+                    $_list['avatar'] = $ov->avatar;
+                    $_list['sign'] = $ov->sign;
+                    $_list['status'] = $ov->status;
+
+                    $gv['list'][] = $_list;
+                }
+            }
+            unset($_list, $ov);
+        }
+        unset($gv, $other);
 
         $datas = array(
             'code' => 0,
             'msg' => '',
             'data' => array(
                 'mine' => $mine,
-                'friend' => $friend,
-                'group' => $group,
+                'friend' => $group,
+                'group' => $groupArr,
             )
         );
 
@@ -104,5 +129,14 @@ class WebSenderController extends Controller {
         );
 
         echo json_encode($datas);
+    }
+
+    /**
+     * 聊天记录
+     * @param Request $request
+     */
+    public function chatLog(Request $request)
+    {
+
     }
 }

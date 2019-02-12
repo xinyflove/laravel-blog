@@ -20,3 +20,4 @@ Route::get('/web-sender/getList', 'WebSenderController@getList');
 Route::get('/web-sender/getMembers', 'WebSenderController@getMembers');
 Route::get('/web-sender/saveChatLog', 'WebSenderController@saveChatLog');
 Route::get('/web-sender/login', 'WebSenderController@login');
+Route::get('/web-sender/chatLog', 'WebSenderController@chatLog');//聊天记录
