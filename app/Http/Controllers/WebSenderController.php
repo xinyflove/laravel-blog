@@ -172,7 +172,7 @@ class WebSenderController extends Controller {
                 ->orderBy('timeline', 'DESC')
                 ->get();
 
-            if(empty($result)){
+            if(!count($result)){
                 return json_encode(array('code' => -1, 'data' => '', 'msg' => '没有记录'));
             }
 
@@ -188,7 +188,7 @@ class WebSenderController extends Controller {
                 ->orderBy('timeline', 'DESC')
                 ->get();
 
-            if(empty($result)){
+            if(!count($result)){
                 return json_encode(array('code' => -1, 'data' => '', 'msg' => '没有记录'));
             }
 
